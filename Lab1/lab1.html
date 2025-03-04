@@ -178,76 +178,58 @@
         }
 
         .patronus-effect {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(173,216,230,0.8) 0%, rgba(0,0,255,0.1) 70%);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            opacity: 0;
-            transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out;
-            z-index: 4;
-        }
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(173,216,230,0.8) 0%, rgba(0,0,255,0.1) 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out;
+    z-index: 4;
+}
 
-        .patronus-effect.active {
-            transform: translate(-50%, -50%) scale(3);
-            opacity: 1;
-        }
+.patronus-effect.active {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 1;
+}
+.patronus-letter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    height: 500px;
+    background-image: url('Patronus.jpg');
+    background-size: cover;
+    background-position: center;
+    display: none; /* Başlangıçta gizli olacak */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    z-index: 4; /* Login formun altında ama diğer her şeyin üstünde */
+}
+.login-links {
+    display: block; /* Flex yerine block yaparak her bağlantıyı alt alta sıralıyoruz */
+    margin-top: 15px;
+    font-size: 14px;
+    color: #070707;
+}
 
-        .patronus-letter {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px;
-            height: 500px;
-            background-image: url('Patronus.jpg');
-            background-size: cover;
-            background-position: center;
-            display: none; /* Başlangıçta gizli olacak */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            z-index: 4; /* Login formun altında ama diğer her şeyin üstünde */
-        }
+.login-links a {
+    text-decoration: none;
+    color: #080707;
+    cursor: pointer;
+    display: block; /* Bağlantıları alt alta sıralar */
+    margin-bottom: 10px;
+    
+}
 
-        .login-links {
-            display: block; /* Flex yerine block yaparak her bağlantıyı alt alta sıralıyoruz */
-            margin-top: 15px;
-            font-size: 14px;
-            color: #070707;
-            font-family: 'Great Vibes', cursive;
-
-        }
-
-        .login-links a {
-            text-decoration: none;
-            color: #080707;
-            cursor: pointer;
-            display: block; /* Bağlantıları alt alta sıralar */
-            margin-bottom: 10px;
-            font-family: 'Great Vibes', cursive;
-
-        }
-
-        .login-links a:hover {
-            text-decoration: underline;
-            color: rgb(12, 11, 11);
-        }
-        #clock {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-family: 'Great Vibes', cursive;
-
-        }
+.login-links a:hover {
+    text-decoration: underline;
+    color: rgb(12, 11, 11);
+}
 
     </style>
 </head>
@@ -272,7 +254,7 @@
 
     <div class="patronus-effect" id="patronusEffect"></div>
     <div class="patronus-letter" id="patronusLetter"></div>
-    <div id="clock"></div>
+
 
     <div class="login-form" id="loginForm">
         <h2 style="color: #0c0c0c; margin-bottom: 15px;">LOGIN</h2>
@@ -282,90 +264,55 @@
             <a href="#" class="forgot-password">Forgot Password?</a>
             <a href="#" class="register">Sign up</a>
         </div>
-        <button class="button-login " onclick="goToLogin()">Login</button>
+        <button class="button-login" onclick="goToLogin()">Login</button>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-    function updateClock() {
-        const clockElement = document.getElementById("clock");
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        clockElement.textContent = `${hours}:${minutes}:${seconds}`;
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function openLetter() {
-        document.querySelector('.letter').classList.add('open');
-    }
-
-    function startLoginProcess() {
-        document.body.classList.add('darken');
-
-        setTimeout(() => {
-            document.querySelector('.envelope').style.display = "none";
-            document.querySelector('.letter').style.display = "none";
-        }, 500);
-
-        setTimeout(() => {
-            document.body.style.backgroundImage = "url('indir.gif')";
-        }, 1000);
-
-        setTimeout(() => {
-            document.getElementById("patronusEffect").classList.add("active");
-        }, 3000);
-
-        setTimeout(() => {
-            document.getElementById("patronusLetter").style.display = "block";
-        }, 4500);
-
-        setTimeout(() => {
-            let form = document.getElementById("loginForm");
-            form.style.display = "flex";
-            form.style.position = "absolute";
-            form.style.top = "50%";
-            form.style.left = "50%";
-            form.style.transform = "translate(-50%, -50%)";
-            form.style.zIndex = "5";
-        }, 5000);
-    }
-
-    let users = [];
-
-    function goToLogin() {
-        let username = document.getElementById("username").value;
-        let password = document.getElementById("password").value;
-
-        if (username && password) {
-            users.push({ username: username, password: password });
-            console.log("Tüm Kullanıcılar:", users);
-        } else {
-            console.log("Lütfen kullanıcı adı ve şifre giriniz.");
+        function openLetter() {
+            document.querySelector('.letter').classList.add('open');
         }
-    }
-    document.addEventListener("keydown", function (event) {
-    if (event.key.toLowerCase() === "h") {
+
+        function startLoginProcess() {
+    document.body.classList.add('darken');
+
+    // Zarfı ve mektubu ekrandan kaldır
+    setTimeout(() => {
+        document.querySelector('.envelope').style.display = "none"; 
+        document.querySelector('.letter').style.display = "none"; 
+    }, 500); 
+
+    // Önce ikinci GIF ekleyelim
+    setTimeout(() => {
+        document.body.style.backgroundImage = "url('indir.gif')"; // Hogwarts teması
+    }, 1000);  
+
+    // Patronus efektini başlat
+    setTimeout(() => {
+        document.getElementById("patronusEffect").classList.add("active");
+    }, 3000); 
+
+    // Patronus büyüsünden sonra Patronus.jpg'yi mektup gibi ortaya koy
+    setTimeout(() => {
+        document.getElementById("patronusLetter").style.display = "block";
+    }, 4500);
+
+    // Login formunu mektubun üstüne koy
+    setTimeout(() => {
         let form = document.getElementById("loginForm");
-        form.style.display = (form.style.display === "none" || form.style.display === "") ? "flex" : "none";
-    }
-});
-
-
-    document.addEventListener("mousemove", function (event) {
-        const cursor = document.getElementById("customCursor");
-        cursor.style.left = event.pageX - 100 + "px";
-        cursor.style.top = event.pageY - 50 + "px";
-    });
-
-    document.querySelector('.envelope').addEventListener("click", openLetter);
-    document.querySelector(".button").addEventListener("click", startLoginProcess);
-    document.querySelector("button[onclick='goToLogin()']").addEventListener("click", goToLogin);
-});
-
+        form.style.display = "flex";
+        form.style.position = "absolute";
+        form.style.top = "50%";
+        form.style.left = "50%";
+        form.style.transform = "translate(-50%, -50%)";  
+        form.style.zIndex = "5"; // Login formu Patronus mektubunun üstünde olacak
+    }, 5000);
+}
+        document.addEventListener("mousemove", function(event) {
+            const cursor = document.getElementById("customCursor");
+            cursor.style.left = event.pageX - 100 + "px"; // Asa boyutuna göre sola kaydır
+            cursor.style.top = event.pageY - 50 + "px"; // Asa yukarı kaydırarak hizala
+        });
+        
     </script>
 </body>
 </html>

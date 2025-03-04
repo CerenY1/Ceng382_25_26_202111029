@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+        
+        body {
+            background-image: url("https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjFiM3ZzbjZmdTUzMWpsazdlZ2p5cGZ5aWhyendtMmpvbmNpcXA5cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uQoMifIk8hTJ7k4zcB/giphy.gif");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            transition: background 1.5s ease-in-out;
+        }
+        
+        .darken {
+            animation: darkenEffect 2s forwards;
+        }
+
+        @keyframes darkenEffect {
+            0% { background-color: rgba(0, 0, 0, 0); }
+            100% { background-color: rgba(0, 0, 0, 0.7); }
+        }
+
+        .custom-cursor {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            transform: rotate(-270deg);
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .envelope {
+            position: relative;
+            width: 400px;
+            height: 250px;
+            background: #e6ccb2;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .envelope.open .letter {
+            transform: translateY(-20%);
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: #d4af89;
+            clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+            z-index: 1;
+        }
+        .seal {
+            position: center;
+            width: 100px;
+            height: 100px;
+            background: #ad0101;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-20%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .seal img {
+            width: 50px;
+            filter: sepia(50%) saturate(300%);
+        }
+
+        .letter {
+            position: absolute;
+            width: 380px;
+            height: 500px;
+            background: #f5e1c8;
+            border-radius: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translateY(100%);
+            transition: transform 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 3;
+        }
+
+        .letter.open {
+            transform: translate(-50%, -50%);
+        }
+
+        .letter.patronus-bg {
+            background: url('Patronus.jpg') ;
+            background-size: cover;
+            background-position: relative;
+        }
+        .letter p {
+            font-family: 'Great Vibes', cursive;
+            font-size: 24px;
+            text-align: center;
+            color: #5a3e1b;
+        }
+
+        .button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #5a3e1b;
+            color: white;
+            border: none;
+            width: auto;
+            text-align: center;
+            font-size: 16px;
+            font-family: 'Great Vibes', cursive;
+
+        }
+
+        .login-form {
+            display: none;
+            width: 250px;
+            padding: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 5;
+            text-align: center;
+            flex-direction: column;
+            font-family: 'Great Vibes', cursive;
+
+        }
+
+        .login-form input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-family: 'Great Vibes', cursive;
+
+        }
+        .button-login {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: none;
+            color: black;
+            border: none;
+            width: auto;
+            text-align: center;
+            font-size: 16px;
+            font-family: 'Great Vibes', cursive;
+
+        }
+
+        .patronus-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(173,216,230,0.8) 0%, rgba(0,0,255,0.1) 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out;
+            z-index: 4;
+        }
+
+        .patronus-effect.active {
+            transform: translate(-50%, -50%) scale(3);
+            opacity: 1;
+        }
+
+        .patronus-letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 500px;
+            background-image: url('Patronus.jpg');
+            background-size: cover;
+            background-position: center;
+            display: none; /* Başlangıçta gizli olacak */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            z-index: 4; /* Login formun altında ama diğer her şeyin üstünde */
+        }
+
+        .login-links {
+            display: block; /* Flex yerine block yaparak her bağlantıyı alt alta sıralıyoruz */
+            margin-top: 15px;
+            font-size: 14px;
+            color: #070707;
+            font-family: 'Great Vibes', cursive;
+
+        }
+
+        .login-links a {
+            text-decoration: none;
+            color: #080707;
+            cursor: pointer;
+            display: block; /* Bağlantıları alt alta sıralar */
+            margin-bottom: 10px;
+            font-family: 'Great Vibes', cursive;
+
+        }
+
+        .login-links a:hover {
+            text-decoration: underline;
+            color: rgb(12, 11, 11);
+        }
+        #clock {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Great Vibes', cursive;
+
+        }
+
+    </style>
+</head>
+<body>
+    <img src="Wand.png" class="custom-cursor" id="customCursor">
+
+    <div class="envelope" onclick="openLetter()">
+        <div class="seal">
+            <img src="HogwartsStamp (1).png" alt="Hogwarts Seal">
+        </div>
+    </div>
+
+    <div class="letter" id="letter">
+        <div id="letterContent">
+            <p>Dear Wizard,</p>
+            <p>Welcome to Hogwarts School of Witchcraft and Wizardry!</p>
+            <p>Please click the button to join this magical world.</p>
+            <button class="button" onclick="startLoginProcess()">Start to Journey</button>
+        </div>
+        <div class="patronus-image" id="patronusImage"></div>
+    </div>
+
+    <div class="patronus-effect" id="patronusEffect"></div>
+    <div class="patronus-letter" id="patronusLetter"></div>
+    <div id="clock"></div>
+
+    <div class="login-form" id="loginForm">
+        <h2 style="color: #0c0c0c; margin-bottom: 15px;">LOGIN</h2>
+        <input type="text" placeholder="Username" id="username">
+        <input type="password" placeholder="Password" id="password">
+        <div class="login-links">
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            <a href="#" class="register">Sign up</a>
+        </div>
+        <button class="button-login " onclick="goToLogin()">Login</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    function updateClock() {
+        const clockElement = document.getElementById("clock");
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function openLetter() {
+        document.querySelector('.letter').classList.add('open');
+    }
+
+    function startLoginProcess() {
+        document.body.classList.add('darken');
+
+        setTimeout(() => {
+            document.querySelector('.envelope').style.display = "none";
+            document.querySelector('.letter').style.display = "none";
+        }, 500);
+
+        setTimeout(() => {
+            document.body.style.backgroundImage = "url('indir.gif')";
+        }, 1000);
+
+        setTimeout(() => {
+            document.getElementById("patronusEffect").classList.add("active");
+        }, 3000);
+
+        setTimeout(() => {
+            document.getElementById("patronusLetter").style.display = "block";
+        }, 4500);
+
+        setTimeout(() => {
+            let form = document.getElementById("loginForm");
+            form.style.display = "flex";
+            form.style.position = "absolute";
+            form.style.top = "50%";
+            form.style.left = "50%";
+            form.style.transform = "translate(-50%, -50%)";
+            form.style.zIndex = "5";
+        }, 5000);
+    }
+
+    let users = [];
+
+    function goToLogin() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        if (username && password) {
+            users.push({ username: username, password: password });
+            console.log("Tüm Kullanıcılar:", users);
+        } else {
+            console.log("Lütfen kullanıcı adı ve şifre giriniz.");
+        }
+    }
+    document.addEventListener("keydown", function (event) {
+    if (event.key.toLowerCase() === "h") {
+        let form = document.getElementById("loginForm");
+        form.style.display = (form.style.display === "none" || form.style.display === "") ? "flex" : "none";
+    }
+});
+
+
+    document.addEventListener("mousemove", function (event) {
+        const cursor = document.getElementById("customCursor");
+        cursor.style.left = event.pageX - 100 + "px";
+        cursor.style.top = event.pageY - 50 + "px";
+    });
+
+    document.querySelector('.envelope').addEventListener("click", openLetter);
+    document.querySelector(".button").addEventListener("click", startLoginProcess);
+    document.querySelector("button[onclick='goToLogin()']").addEventListener("click", goToLogin);
+});
+
+    </script>
+</body>
+</html>

@@ -286,86 +286,78 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-    function updateClock() {
-        const clockElement = document.getElementById("clock");
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        clockElement.textContent = `${hours}:${minutes}:${seconds}`;
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function openLetter() {
-        document.querySelector('.letter').classList.add('open');
-    }
-
-    function startLoginProcess() {
-        document.body.classList.add('darken');
-
-        setTimeout(() => {
-            document.querySelector('.envelope').style.display = "none";
-            document.querySelector('.letter').style.display = "none";
-        }, 500);
-
-        setTimeout(() => {
-            document.body.style.backgroundImage = "url('indir.gif')";
-        }, 1000);
-
-        setTimeout(() => {
-            document.getElementById("patronusEffect").classList.add("active");
-        }, 3000);
-
-        setTimeout(() => {
-            document.getElementById("patronusLetter").style.display = "block";
-        }, 4500);
-
-        setTimeout(() => {
-            let form = document.getElementById("loginForm");
-            form.style.display = "flex";
-            form.style.position = "absolute";
-            form.style.top = "50%";
-            form.style.left = "50%";
-            form.style.transform = "translate(-50%, -50%)";
-            form.style.zIndex = "5";
-        }, 5000);
-    }
-
-    let users = [];
-
-    function goToLogin() {
-        let username = document.getElementById("username").value;
-        let password = document.getElementById("password").value;
-
-        if (username && password) {
-            users.push({ username: username, password: password });
-            console.log("Tüm Kullanıcılar:", users);
-        } else {
-            console.log("Lütfen kullanıcı adı ve şifre giriniz.");
+     document.addEventListener("DOMContentLoaded", function () {
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clockElement.textContent = `${hours}:${minutes}:${seconds}`;
         }
-    }
-    document.addEventListener("keydown", function (event) {
-    if (event.key.toLowerCase() === "h") {
-        let form = document.getElementById("loginForm");
-        form.style.display = (form.style.display === "none" || form.style.display === "") ? "flex" : "none";
-    }
-});
 
+        setInterval(updateClock, 1000);
+        updateClock();
 
-    document.addEventListener("mousemove", function (event) {
-        const cursor = document.getElementById("customCursor");
-        cursor.style.left = event.pageX - 100 + "px";
-        cursor.style.top = event.pageY - 50 + "px";
+        function openLetter() {
+            document.querySelector('.letter').classList.add('open');
+        }
+
+        function startLoginProcess() {
+            document.body.classList.add('darken');
+            setTimeout(() => {
+                document.querySelector('.envelope').style.display = "none";
+                document.querySelector('.letter').style.display = "none";
+            }, 500);
+            setTimeout(() => {
+                document.body.style.backgroundImage = "url('indir.gif')";
+            }, 1000);
+            setTimeout(() => {
+                document.getElementById("patronusEffect").classList.add("active");
+            }, 3000);
+            setTimeout(() => {
+                document.getElementById("patronusLetter").style.display = "block";
+            }, 4500);
+            setTimeout(() => {
+                let form = document.getElementById("loginForm");
+                form.style.display = "flex";
+                form.style.position = "absolute";
+                form.style.top = "50%";
+                form.style.left = "50%";
+                form.style.transform = "translate(-50%, -50%)";
+                form.style.zIndex = "5";
+            }, 5000);
+        }
+
+        function goToLogin() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            if (username === "admin" && password === "admin") {
+                alert("Login successful!");
+                window.location.href = "table.html";
+            } else {
+                alert("Invalid username or password. Please try again.");
+            }
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key.toLowerCase() === "h") {
+                let form = document.getElementById("loginForm");
+                form.style.display = (form.style.display === "none" || form.style.display === "") ? "flex" : "none";
+            }
+        });
+
+        document.addEventListener("mousemove", function (event) {
+            const cursor = document.getElementById("customCursor");
+            cursor.style.left = event.pageX - 100 + "px";
+            cursor.style.top = event.pageY - 50 + "px";
+        });
+
+        document.querySelector('.envelope').addEventListener("click", openLetter);
+        document.querySelector(".button").addEventListener("click", startLoginProcess);
+        document.querySelector("button[onclick='goToLogin()']").addEventListener("click", goToLogin);
     });
-
-    document.querySelector('.envelope').addEventListener("click", openLetter);
-    document.querySelector(".button").addEventListener("click", startLoginProcess);
-    document.querySelector("button[onclick='goToLogin()']").addEventListener("click", goToLogin);
-});
-
     </script>
 </body>
 </html>

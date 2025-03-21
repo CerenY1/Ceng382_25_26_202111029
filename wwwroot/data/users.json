@@ -1,0 +1,64 @@
+[
+    {
+      "Username": "user1",
+      "Password": "password1",
+      "Role": "Admin",
+      "IsActive": true
+    },
+    {
+      "Username": "user2",
+      "Password": "password2",
+      "Role": "User",
+      "IsActive": true
+    }
+    ,
+    {
+      "Username": "emily.clark",
+      "Password": "emily123",
+      "Role": "Admin",
+      "IsActive": true
+    },
+    {
+      "Username": "michael.jordan",
+      "Password": "airmj23",
+      "Role": "User",
+      "IsActive": true
+    },
+    {
+      "Username": "taylor.swift",
+      "Password": "red1989",
+      "Role": "User",
+      "IsActive": true
+    },
+    {
+      "Username": "elon.musk",
+      "Password": "teslaX",
+      "Role": "Admin",
+      "IsActive": true
+    },
+    {
+      "Username": "natalie.portman",
+      "Password": "blackSwan",
+      "Role": "Editor",
+      "IsActive": true
+    },
+    {
+      "Username": "leonardo.dicaprio",
+      "Password": "oscar2022",
+      "Role": "Moderator",
+      "IsActive": true
+    },
+    {
+      "Username": "bill.gates",
+      "Password": "windows95",
+      "Role": "User",
+      "IsActive": true
+    },
+    {
+      "Username": "ada.lovelace",
+      "Password": "algorithm",
+      "Role": "User",
+      "IsActive": false
+    }
+]
+  

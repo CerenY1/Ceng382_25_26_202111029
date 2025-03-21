@@ -4,6 +4,8 @@ using RazorPage.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace RazorPage.Pages
 {
@@ -28,8 +30,38 @@ namespace RazorPage.Pages
 
         public List<ClassInformationTable> FilteredClasses { get; set; } = new();
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            var username = HttpContext.Session.GetString("Username");
+            var token = HttpContext.Session.GetString("Token");
+            var sessionId = HttpContext.Session.GetString("SessionId");
+
+            // Eğer session boşsa, cookie'den oku
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(sessionId))
+            {
+                var cookieUsername = Request.Cookies["Username"];
+                var cookieToken = Request.Cookies["Token"];
+                var cookieSessionId = Request.Cookies["SessionId"];
+
+                if (!string.IsNullOrEmpty(cookieUsername) &&
+                    !string.IsNullOrEmpty(cookieToken) &&
+                    !string.IsNullOrEmpty(cookieSessionId))
+                {
+                    HttpContext.Session.SetString("Username", cookieUsername);
+                    HttpContext.Session.SetString("Token", cookieToken);
+                    HttpContext.Session.SetString("SessionId", cookieSessionId);
+
+                    username = cookieUsername;
+                    token = cookieToken;
+                    sessionId = cookieSessionId;
+                }
+            }
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(sessionId))
+            {
+                return RedirectToPage("/Login");
+            }
+
             var query = ClassList.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(FilterByName))
@@ -49,7 +81,10 @@ namespace RazorPage.Pages
                     StudentCount = c.StudentCount,
                     Description = c.Description
                 }).ToList();
+
+            return Page();
         }
+
 
         public IActionResult OnPostAdd()
         {
@@ -114,6 +149,61 @@ namespace RazorPage.Pages
             }
 
             return RedirectToPage(new { FilterByName, PageNumber });
+        }
+
+        public IActionResult OnPostExport()
+        {
+            var username = HttpContext.Session.GetString("Username");
+            var token = HttpContext.Session.GetString("Token");
+            var sessionId = HttpContext.Session.GetString("SessionId");
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(sessionId))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            var query = ClassList.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(FilterByName))
+            {
+                query = query.Where(c => c.ClassName.Contains(FilterByName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var paged = query
+                .Skip((PageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            var selectedColumnsString = Request.Form["SelectedColumns"];
+            var selectedColumns = selectedColumnsString.ToString()
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(c => c.Trim())
+                .ToList();
+
+            var exportData = paged.Select(c =>
+            {
+                var result = new Dictionary<string, object>();
+
+                if (selectedColumns.Count == 0)
+                {
+                    result["ClassName"] = c.ClassName;
+                    result["StudentCount"] = c.StudentCount;
+                    result["Description"] = c.Description;
+                }
+                else
+                {
+                    if (selectedColumns.Contains("Class Name")) result["ClassName"] = c.ClassName;
+                    if (selectedColumns.Contains("Student Count")) result["StudentCount"] = c.StudentCount;
+                    if (selectedColumns.Contains("Description")) result["Description"] = c.Description;
+                }
+
+                return result;
+            }).ToList();
+
+            var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
+            var fileName = $"Export_Page_{PageNumber}_{DateTime.Now:yyyyMMddHHmmss}.json";
+            var fileBytes = System.Text.Encoding.UTF8.GetBytes(json);
+            return File(fileBytes, "application/json", fileName);
         }
 
         private static List<ClassInformationModel> GenerateFakeData()

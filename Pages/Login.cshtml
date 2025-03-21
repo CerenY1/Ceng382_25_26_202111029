@@ -1,0 +1,87 @@
+@page
+@model RazorPage.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<style>
+    body {
+        background: linear-gradient(to right, #e0f2fe, #dbeafe); /* daha yumuşak mavi geçiş */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .login-container {
+        max-width: 400px;
+        margin: 80px auto;
+        padding: 40px 30px;
+        background-color: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-container:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2); /* hafif mavi gölge */
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 28px;
+        color: #1e3a8a; /* koyu lacivert-mavi */
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-control:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+    }
+
+    .btn-login {
+        width: 100%;
+        border-radius: 10px;
+        background-color: #3b82f6; /* Class Management'taki koyu mavi */
+        border: none;
+        color: white;
+        padding: 10px;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-login:hover {
+        background-color: #2563eb;
+    }
+
+    .text-danger {
+        text-align: center;
+        margin-top: 15px;
+        color: #dc2626;
+    }
+</style>
+
+<div class="login-container">
+    <h2>Login</h2>
+
+    <form method="post">
+        <div class="form-group mb-3">
+            <label asp-for="Username" class="form-label">Username</label>
+            <input asp-for="Username" class="form-control" placeholder="Enter your username" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" type="password" placeholder="Enter your password" />
+        </div>
+
+        <div class="text-danger">@Model.ErrorMessage</div>
+
+        <button type="submit" class="btn btn-login mt-3">Login</button>
+    </form>
+</div>

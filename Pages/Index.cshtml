@@ -11,9 +11,7 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    .container {
-        margin-top: 30px;
-    }
+    .container { margin-top: 30px; }
 
     .card {
         border-radius: 15px;
@@ -23,9 +21,7 @@
         transition: 0.3s;
     }
 
-    .card:hover {
-        transform: scale(1.02);
-    }
+    .card:hover { transform: scale(1.02); }
 
     .table {
         background-color: white;
@@ -40,16 +36,10 @@
         text-transform: uppercase;
     }
 
-    tr:nth-child(even) {
-        background-color: #f1f5f9;
-    }
+    tr:nth-child(even) { background-color: #f1f5f9; }
 
-    tr:hover {
-        background-color: #e0f2fe;
-        transition: 0.3s;
-    }
+    tr:hover { background-color: #e0f2fe; transition: 0.3s; }
 
-    /* Butonlar */
     .btn-primary {
         background-color: #2563eb;
         border-color: #2563eb;
@@ -57,9 +47,7 @@
         transition: 0.3s;
     }
 
-    .btn-primary:hover {
-        background-color: #1e40af;
-    }
+    .btn-primary:hover { background-color: #1e40af; }
 
     .btn-danger {
         background-color: #ef4444;
@@ -68,23 +56,19 @@
         transition: 0.3s;
     }
 
-    .btn-danger:hover {
-        background-color: #b91c1c;
-    }
-
+    .btn-danger:hover { background-color: #b91c1c; }
 </style>
 
 <div class="container">
     <div class="row">
+        <!-- Form -->
         <div class="col-md-4">
             <div class="card">
                 <h2 class="text-center text-primary">
                     @(Model.EditId.HasValue ? "Edit Class" : "Add New Class")
                 </h2>
-                <form method="post" asp-page-handler="Edit">
-                    
+                <form method="post" asp-page-handler="@(Model.EditId.HasValue ? "Edit" : "Add")">
                     <input type="hidden" asp-for="EditId" />
-
                     <div class="form-group">
                         <label><strong>Class Name</strong></label>
                         <input type="text" asp-for="NewClass.ClassName" class="form-control" required />
@@ -97,22 +81,28 @@
                         <label><strong>Description</strong></label>
                         <textarea asp-for="NewClass.Description" class="form-control"></textarea>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100 mt-3"
-                            asp-page-handler="@(Model.EditId != null ? "Edit" : "Add")">
+                    <button type="submit" class="btn btn-primary w-100 mt-3">
                         @(Model.EditId != null ? "Update" : "Add")
                     </button>
                 </form>
             </div>
         </div>
 
+        <!-- Table -->
         <div class="col-md-8">
             <div class="card">
                 <h2 class="text-center text-primary">Class List</h2>
+
+                <!-- Filter -->
+                <form method="get" class="mb-3 d-flex">
+                    <input type="text" name="FilterByName" class="form-control mr-2"
+                           value="@Model.FilterByName" placeholder="Filter by class name" />
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th>Id</th>
                             <th>Class Name</th>
                             <th>Student Count</th>
                             <th>Description</th>
@@ -120,29 +110,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in IndexModel.ClassList)
+                        @foreach (var item in Model.FilteredClasses)
                         {
-                            <tr>
-                                <td>@item.Id</td>
-                                <td>@item.ClassName</td>
-                                <td>@item.StudentCount</td>
-                                <td>@item.Description</td>
-                                <td>
-                                    <div class="d-flex justify-content-start">
-                                        <form method="post" asp-page-handler="Edit" class="mr-2 mb-0">
-                                            <input type="hidden" name="id" value="@item.Id" />
-                                            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
-                                        </form>
-                                        <form method="post" asp-page-handler="Delete" class="mb-0">
-                                            <input type="hidden" name="id" value="@item.Id" />
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
+                            var classItem = RazorPage.Pages.IndexModel.ClassList
+                                .FirstOrDefault(x => x.ClassName == item.ClassName && x.Description == item.Description);
+                            if (classItem != null)
+                            {
+                                <tr>
+                                    <td>@item.ClassName</td>
+                                    <td>@item.StudentCount</td>
+                                    <td>@item.Description</td>
+                                    <td>
+                                        <div class="d-flex justify-content-start">
+                                            <form method="post" asp-page-handler="StartEdit" class="mr-2 mb-0">
+                                                <input type="hidden" name="id" value="@classItem.Id" />
+                                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                            </form>
+                                            <form method="post" asp-page-handler="Delete" class="mb-0">
+                                                <input type="hidden" name="id" value="@classItem.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
+
+                <!-- Pagination -->
+                <div class="text-center">
+                    <p>Page @Model.PageNumber of @Model.TotalPages</p>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <a asp-page="./Index"
+                           asp-route-PageNumber="@i"
+                           asp-route-FilterByName="@Model.FilterByName"
+                           class="btn btn-sm @(i == Model.PageNumber ? "btn-primary" : "btn-outline-primary") mx-1">
+                            @i
+                        </a>
+                    }
+                </div>
             </div>
         </div>
     </div>

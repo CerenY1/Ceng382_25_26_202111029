@@ -4,6 +4,7 @@ using RazorPage.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace RazorPage.Pages
 {
@@ -115,6 +116,46 @@ namespace RazorPage.Pages
 
             return RedirectToPage(new { FilterByName, PageNumber });
         }
+
+        public IActionResult OnPostExportCurrentPage(List<string>? selectedColumns)
+        {
+            var query = ClassList.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(FilterByName))
+            {
+                query = query.Where(c => c.ClassName.Contains(FilterByName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var pageData = query
+                .Skip((PageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            // Eğer hiç sütun seçilmediyse, varsayılan olarak hepsini ekle
+            var columnsToExport = selectedColumns != null && selectedColumns.Count > 0
+                ? selectedColumns
+                : new List<string> { "Class Name", "Student Count", "Description" };
+
+            var exportData = pageData.Select(c =>
+            {
+                var dict = new Dictionary<string, object>();
+
+                if (columnsToExport.Contains("Class Name"))
+                    dict["Class Name"] = c.ClassName;
+                if (columnsToExport.Contains("Student Count"))
+                    dict["Student Count"] = c.StudentCount;
+                if (columnsToExport.Contains("Description"))
+                    dict["Description"] = c.Description;
+
+                return dict;
+            }).ToList();
+
+            var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
+            var bytes = System.Text.Encoding.UTF8.GetBytes(json);
+
+            return File(bytes, "application/json", "CurrentPage_Export.json");
+        }
+
 
         private static List<ClassInformationModel> GenerateFakeData()
         {

@@ -131,7 +131,7 @@ namespace RazorPage.Pages
                 .Take(PageSize)
                 .ToList();
 
-            // Eğer hiç sütun seçilmediyse, varsayılan olarak hepsini ekle
+        
             var columnsToExport = selectedColumns != null && selectedColumns.Count > 0
                 ? selectedColumns
                 : new List<string> { "Class Name", "Student Count", "Description" };

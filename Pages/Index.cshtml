@@ -72,7 +72,7 @@
 
 <div class="container">
     <div class="row">
-        <!-- Form -->
+  
         <div class="col-md-4">
             <div class="card">
                 <h2 class="text-center text-primary">
@@ -99,10 +99,9 @@
             </div>
         </div>
 
-        <!-- Table -->
+   
         <div class="col-md-8">
             <div class="card">
-                <!-- Class List Header + Export -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h2 class="text-primary mb-0">Class List</h2>
 
@@ -114,7 +113,6 @@
                     </form>
                 </div>
 
-                <!-- Filter -->
                 <form method="get" class="mb-3 d-flex">
                     <input type="text" name="FilterByName" class="form-control mr-2"
                            value="@Model.FilterByName" placeholder="Filter by class name" />
@@ -131,35 +129,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.FilteredClasses)
+                        @foreach (var item in Model.FilteredClasses) 
                         {
-                            var classItem = RazorPage.Pages.IndexModel.ClassList
-                                .FirstOrDefault(x => x.ClassName == item.ClassName && x.Description == item.Description);
-                            if (classItem != null)
-                            {
-                                <tr>
-                                    <td data-col="Class Name">@item.ClassName</td>
-                                    <td data-col="Student Count">@item.StudentCount</td>
-                                    <td data-col="Description">@item.Description</td>
-                                    <td>
-                                        <div class="d-flex justify-content-start">
-                                            <form method="post" asp-page-handler="StartEdit" class="me-3 mb-0">
-                                                <input type="hidden" name="id" value="@classItem.Id" />
-                                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
-                                            </form>
-                                            <form method="post" asp-page-handler="Delete" class="mb-0">
-                                                <input type="hidden" name="id" value="@classItem.Id" />
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
+                            <tr>
+                                <td data-col="Class Name">@item.ClassName</td>
+                                <td data-col="Student Count">@item.StudentCount</td>
+                                <td data-col="Description">@item.Description</td>
+                                <td>
+                                    <div class="d-flex justify-content-start">
+                                        <form method="post" asp-page-handler="StartEdit" class="me-3 mb-0">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                        </form>
+                                        <form method="post" asp-page-handler="Delete" class="mb-0">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
 
-                <!-- Pagination -->
                 <div class="text-center">
                     <p>Page @Model.PageNumber of @Model.TotalPages</p>
                     @for (int i = 1; i <= Model.TotalPages; i++)
@@ -199,7 +191,6 @@
                 }
 
                 selectedInput.value = Array.from(selectedSet).join(',');
-                console.log("Export edilecek sütunlar:", selectedInput.value);
             });
         });
     });

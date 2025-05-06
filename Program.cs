@@ -1,8 +1,15 @@
 using System.Text.Json;
 using RazorPage.Models;
 using System.IO;
+using RazorPage.Data;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<SchoolDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolDbConnection")));
+
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -16,10 +23,19 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-app.UseHttpsRedirection(); // Eksikse cookie çalışmayabilir!
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<SchoolDbContext>();
+    context.Database.Migrate(); 
+    DbInitializer.Seed(context);
+}
+
+
+app.UseHttpsRedirection(); 
 app.UseStaticFiles();
 app.UseRouting();
-app.UseSession(); // DİKKAT: Routing'den sonra çağrılmalı
+app.UseSession(); 
 app.UseAuthorization(); 
 app.MapRazorPages();
 
@@ -32,11 +48,11 @@ app.MapGet("/", async context =>
         session.GetString("Token") != null &&
         session.GetString("SessionId") != null)
     {
-        context.Response.Redirect("/Index"); // Giriş yapmışsa Index'e
+        context.Response.Redirect("/Index"); 
     }
     else
     {
-        context.Response.Redirect("/Login"); // Giriş yapmamışsa Login'e
+        context.Response.Redirect("/Login"); 
     }
 });
 app.Run();

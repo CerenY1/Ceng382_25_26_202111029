@@ -30,7 +30,6 @@ namespace RazorPage.Pages
             var token = HttpContext.Session.GetString("Token");
             var sessionId = HttpContext.Session.GetString("SessionId");
 
-            // Eğer kullanıcı zaten giriş yaptıysa Index'e gönder
             if (!string.IsNullOrEmpty(username) && 
                 !string.IsNullOrEmpty(token) && 
                 !string.IsNullOrEmpty(sessionId))
@@ -38,7 +37,7 @@ namespace RazorPage.Pages
                 return RedirectToPage("/Index");
             }
 
-            return Page(); // aksi halde Login sayfasında kal
+            return Page(); 
         }
 
         public IActionResult OnPost()
@@ -55,17 +54,14 @@ namespace RazorPage.Pages
                 return Page();
             }
 
-            // Token ve SessionId oluştur
             var token = Guid.NewGuid().ToString();
             var sessionId = HttpContext.Session.Id;
 
-            // Session'a yaz
             HttpContext.Session.SetString("Username", user.Username);
             HttpContext.Session.SetString("Role", user.Role);
             HttpContext.Session.SetString("Token", token);
             HttpContext.Session.SetString("SessionId", sessionId);
 
-            // Cookie ayarları
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.UtcNow.AddMinutes(20),
@@ -74,12 +70,10 @@ namespace RazorPage.Pages
                 SameSite = SameSiteMode.Strict
             };
 
-            // Cookie'lere yaz
             Response.Cookies.Append("Username", user.Username, cookieOptions);
             Response.Cookies.Append("Token", token, cookieOptions);
             Response.Cookies.Append("SessionId", sessionId, cookieOptions);
 
-            // Giriş başarılı → Index'e yönlendir
             return RedirectToPage("/Index");
         }
     }

@@ -8,16 +8,13 @@ namespace RazorPage.Pages
     {
         public IActionResult OnGet()
         {
-            // Oturumu temizle
             HttpContext.Session.Clear();
 
-            // Tüm çerezleri temizle
             foreach (var cookie in Request.Cookies.Keys)
             {
                 Response.Cookies.Delete(cookie);
             }
 
-            // Login sayfasına yönlendir
             return RedirectToPage("/Login");
         }
     }
